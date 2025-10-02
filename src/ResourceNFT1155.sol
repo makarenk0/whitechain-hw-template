@@ -5,38 +5,29 @@ import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
 /**
- * @title ResourceNFT1155
- * @notice ERC1155 for base resources: Wood, Iron, Gold, Leather, Stone, Diamond.
- * @dev Direct mint/burn from external users is forbidden. Only authorized contracts
- *      (CraftingSearch) can mint (search rewards) and burn (craft consumption).
+ * @title ResourceNFT1155 (Template)
+ * @notice Minimal ERC1155 with roles. Ready for search/craft flows.
+ *
+ * TODO:
+ * - Define resource IDs externally (in CraftingSearch or config).
+ * - Allow only CraftingSearch to mint on search and burn on craft.
+ * - Enforce “no direct mint/burn by users” in actual flows.
  */
 contract ResourceNFT1155 is ERC1155, AccessControl {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // CraftingSearch
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE"); // CraftingSearch
-
-    string public name = "Cossack Resources";
-    string public symbol = "CRES";
-
-    // Resource IDs
-    uint256 public constant WOOD = 1;
-    uint256 public constant IRON = 2;
-    uint256 public constant GOLD = 3;
-    uint256 public constant LEATHER = 4;
-    uint256 public constant STONE = 5;
-    uint256 public constant DIAMOND = 6;
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // assign to CraftingSearch
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE"); // assign to CraftingSearch
 
     /**
-     * @param baseURI Base URI for ERC1155 metadata.
-     * @param admin Address that receives DEFAULT_ADMIN_ROLE.
+     * @notice Example of resourse definition.
+     *
      */
-    constructor(string memory baseURI, address admin) ERC1155(baseURI) {
+    uint256 public constant WOOD = 1;
+
+    constructor(address admin) ERC1155("") {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
-    /**
-     * @notice Mint a batch of resources to `to`.
-     * @dev Only CraftingSearch should hold MINTER_ROLE.
-     */
+    /// @dev Mint batch of resources. Intended to be called only by CraftingSearch.
     function mintBatch(
         address to,
         uint256[] calldata ids,
@@ -45,15 +36,19 @@ contract ResourceNFT1155 is ERC1155, AccessControl {
         _mintBatch(to, ids, amounts, "");
     }
 
-    /**
-     * @notice Burn a batch of resources from `from`.
-     * @dev Only CraftingSearch should hold BURNER_ROLE.
-     */
+    /// @dev Burn batch of resources. Intended to be called only by CraftingSearch.
     function burnBatch(
         address from,
         uint256[] calldata ids,
         uint256[] calldata amounts
     ) external onlyRole(BURNER_ROLE) {
         _burnBatch(from, ids, amounts);
+    }
+
+    /// @inheritdoc ERC1155
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view override(ERC1155, AccessControl) returns (bool) {
+        return super.supportsInterface(interfaceId);
     }
 }
