@@ -135,6 +135,8 @@ Grant `BURNER_ROLE` to Marketplace in deploy script.
 
 ## ⚙️ Setup Instructions
 
+https://getfoundry.sh/introduction/installation/
+
 ```bash
 # Install Foundry
 curl -L https://foundry.paradigm.xyz | bash
