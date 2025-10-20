@@ -5,12 +5,9 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
 /**
- * @title MagicToken (Template)
- * @notice Minimal ERC20 with role-gated mint. No direct public mint.
- *
- * TODO :
- * - Restrict that only Marketplace can mint on successful sale.
- * - Enforce any sale accounting you need on Marketplace side.
+ * @title MagicToken
+ * @notice ERC20 token for the Cossack Business game economy.
+ * @dev Only Marketplace can mint tokens when items are sold. Direct minting is forbidden.
  */
 contract MagicToken is ERC20, AccessControl {
     bytes32 public constant MARKET_ROLE = keccak256("MARKET_ROLE"); // assign to Marketplace
@@ -19,6 +16,11 @@ contract MagicToken is ERC20, AccessControl {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
+    /**
+     * @dev Mint Magic tokens to the specified address
+     * @param to The address to mint tokens to
+     * @param amount The amount of tokens to mint
+     */
     function mint(address to, uint256 amount) external onlyRole(MARKET_ROLE) {
         _mint(to, amount);
     }

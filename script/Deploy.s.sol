@@ -26,11 +26,12 @@ contract Deploy is Script {
         CraftingSearch cs = new CraftingSearch(admin, res, items);
         Marketplace mkt = new Marketplace(admin, items, magic);
 
-        // Grant roles for future flows (you will use them when implementing logic)
+        // Grant roles for the game flows
         res.grantRole(res.MINTER_ROLE(), address(cs));
         res.grantRole(res.BURNER_ROLE(), address(cs));
 
         items.grantRole(items.MINTER_ROLE(), address(cs));
+        items.grantRole(items.BURNER_ROLE(), address(mkt));
 
         magic.grantRole(magic.MARKET_ROLE(), address(mkt));
 

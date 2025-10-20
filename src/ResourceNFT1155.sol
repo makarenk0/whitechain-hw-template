@@ -5,25 +5,25 @@ import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
 /**
- * @title ResourceNFT1155 (Template)
- * @notice Minimal ERC1155 with roles. Ready for search/craft flows.
- *
- * TODO:
- * - Define resource IDs externally (in CraftingSearch or config).
- * - Allow only CraftingSearch to mint on search and burn on craft.
- * - Enforce “no direct mint/burn by users” in actual flows.
+ * @title ResourceNFT1155
+ * @notice ERC1155 contract for managing 6 basic resources in Cossack Business game.
+ * @dev Only CraftingSearch can mint/burn resources. Direct minting/burning is forbidden.
  */
 contract ResourceNFT1155 is ERC1155, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // assign to CraftingSearch
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE"); // assign to CraftingSearch
 
     /**
-     * @notice Example of resourse definition.
-     *
+     * @notice Resource IDs for the 6 basic resources
      */
-    uint256 public constant WOOD = 1;
+    uint256 public constant WOOD = 1;      // Дерево
+    uint256 public constant IRON = 2;      // Залізо
+    uint256 public constant GOLD = 3;      // Золото
+    uint256 public constant LEATHER = 4;   // Шкіра
+    uint256 public constant STONE = 5;     // Камінь
+    uint256 public constant DIAMOND = 6;   // Алмаз
 
-    constructor(address admin) ERC1155("") {
+    constructor(address admin) ERC1155("https://cossack-business.com/api/resource/{id}.json") {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
